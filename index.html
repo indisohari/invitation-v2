@@ -6,7 +6,8 @@
   
   <meta property="og:title" content="신동윤 · 신지연 결혼식에 초대합니다" />
   <meta property="og:description" content="2026년 5월 23일 저녁 6시 30분, 남산예술원 웨딩홀" />
-  <meta property="og:image" content="https://lh3.googleusercontent.com/u/0/d/170jycPMIHhklZNOsD6p72zajqsflt7o0" /> <meta property="og:type" content="website" />
+  <meta property="og:image" content="https://lh3.googleusercontent.com/u/0/d/170jycPMIHhklZNOsD6p72zajqsflt7o0" />
+  <meta property="og:type" content="website" />
 
   <link href="https://fonts.googleapis.com/css2?family=Nanum+Myeongjo:wght@400;700&family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
 
@@ -117,7 +118,8 @@
           <div class="rsvp-input-group"><label class="rsvp-label">성함</label><input id="name" placeholder="성함을 입력해주세요" maxlength="10"></div>
           <div class="rsvp-input-group"><label class="rsvp-label">휴대폰 번호</label><input id="phone" type="tel" placeholder="010-0000-0000" maxlength="13"></div>
           <div class="rsvp-input-group"><label class="rsvp-label">참석 인원 (본인 포함)</label>
-            <select id="guestCount">
+            <select id="guestCount" style="color: #666;">
+              <option value="" disabled selected>인원 선택</option>
               <option value="1">1명 (혼자 참석합니다)</option><option value="2">2명 (동반인 1명)</option><option value="3">3명 (동반인 2명)</option>
               <option value="4">4명 (동반인 3명)</option><option value="5">5명 (동반인 4명)</option><option value="6">6명 (동반인 5명)</option>
               <option value="7">7명 (동반인 6명)</option><option value="8">8명 (동반인 7명)</option><option value="9">9명 (동반인 8명)</option><option value="10">10명 이상</option>
@@ -186,6 +188,12 @@
         entries.forEach(function(entry) { if (entry.isIntersecting) entry.target.classList.add("visible"); });
       }, { threshold: 0.1 });
       document.querySelectorAll('.fade-in').forEach(function(el) { observer.observe(el); });
+      
+      // [수정] 인원 선택하면 글자색 진하게 변경
+      document.getElementById('guestCount').addEventListener('change', function() {
+        this.style.color = '#333';
+      });
+      
       initLinks();
     });
 
@@ -217,13 +225,18 @@
       var count = document.getElementById("guestCount").value;
       var btn = document.getElementById("submitBtn");
 
-      if (!name || name.length < 2) return toast("성함을 2글자 이상 입력해 주세요");
-      if (!phone || phone.length < 10) return toast("연락처를 정확히 입력해 주세요");
+      // [수정] 표준식 유효성 검사 적용 (이름 2~4자, 휴대폰 01x-xxxx-xxxx)
+      var nameRegex = /^[가-힣]{2,4}$/;
+      var phoneRegex = /^01[016789]-\d{3,4}-\d{4}$/; // 010, 011 등 포함
+
+      if (!nameRegex.test(name)) return toast("성함을 한글 2~4자로 입력해 주세요");
+      if (!phoneRegex.test(phone)) return toast("연락처를 정확히 입력해 주세요");
+      if (!count) return toast("참석 인원을 선택해 주세요"); // 인원 미선택 시 경고
 
       btn.disabled = true; btn.textContent = "전송 중...";
 
       // [중요] 여기에 본인의 백엔드 URL을 넣으세요!
-      var scriptUrl = "https://script.google.com/macros/s/아이디/exec"; 
+      var scriptUrl = "https://script.google.com/macros/s/AKfycbyiH2i4i4H...본인URL.../exec"; 
 
       fetch(scriptUrl, {
         method: "POST",
@@ -232,9 +245,12 @@
         body: JSON.stringify({ name: name, phone: phone, guestCount: count })
       })
       .then(response => {
-        toast("소중한 마음이 전달되었습니다. 감사합니다");
+        // [수정] 완료 메시지 변경: "소식이 전달되었습니다"
+        toast("소식이 전달되었습니다"); 
         document.getElementById("name").value = "";
         document.getElementById("phone").value = "";
+        document.getElementById("guestCount").value = ""; // 인원 선택 초기화
+        document.getElementById("guestCount").style.color = '#666'; // 색상 초기화
         btn.disabled = false; btn.textContent = "참석 소식 전하기";
       })
       .catch(error => {

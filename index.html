@@ -68,6 +68,22 @@
     .modal-img { max-width: 100%; max-height: 90%; }
     .modal-close { position: absolute; top: 20px; right: 20px; color: #fff; font-size: 40px; cursor: pointer; font-weight: 300; }
     .toast { position: fixed; left: 50%; transform: translateX(-50%); bottom: 30px; background: rgba(0,0,0,0.8); color: #fff; padding: 12px 20px; border-radius: 30px; font-size: 13px; display: none; z-index: 3000; font-weight: 300; }
+/* [추가] 사진 톤앤매너 일괄 보정 (웨딩 필름 룩) */
+    .main-photo, .gallery-img {
+      /* brightness(1.05): 사진을 5% 화사하게
+         contrast(1.02): 흐릿하지 않게 선명도 살짝 UP
+         sepia(0.08): 웨딩 특유의 따뜻하고 빈티지한 분위기 한 방울
+         saturate(0.9): 쨍한 원색을 살짝 차분하게 눌러서 고급스럽게
+      */
+      filter: brightness(1.05) contrast(1.02) sepia(0.08) saturate(0.9);
+      transition: filter 0.3s ease; /* 부드러운 전환 효과 */
+    }
+
+    /* (선택사항) 사진을 클릭하거나 터치했을 때는 원본 색감 보여주기 */
+    .main-photo:active, .gallery-img:active {
+      filter: none;
+    }
+  
   </style>
 </head>
 

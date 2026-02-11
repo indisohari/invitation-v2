@@ -132,11 +132,38 @@
       <section class="poem-section fade-in" style="background: #fafafa;">
         <span class="section-label">Invitation</span>
         <div class="poem-wrap font-serif">
-          신중한 그녀는 느긋합니다. 성급한 그는 마음이 앞섭니다.
-          속도가 너무나 다른 둘이 만났습니다.
+          신중한 지연은 느긋합니다.
+          빠릿한 동윤은 성급합니다.
+          속도가 다른 둘이 만났습니다.
           결혼 준비 중에 참 많이도 아웅다웅했습니다.
-          (중략)
-          함께해 주신다면 저희에게는 오래도록 감사한 순간으로 남을 것입니다.
+
+          그녀는 강아지를 좋아합니다.
+          그는 고양이를 키우고 있습니다.
+          기꺼이 고양이를 가족으로 맞이합니다.
+
+          다행히 음식을 가리진 않습니다.
+          이왕이면 상대가 좋아하는 걸 함께 즐깁니다.
+          늘 메뉴 선택을 미루는 부작용이 생깁니다.
+
+          다행히 서로 좋아하는 취미가 같습니다.
+          테니스를 치다가 만났습니다.
+          함께 땀 흘리며 호흡하는 재미가 있습니다.
+
+          삶의 방향도,
+          사랑의 방식도 다른 둘이 만났습니다.
+
+          “자유는 ‘자기의 이유’로 살아가는 것”이라고 했습니다.
+          너무나 다른 상대방의 존재를
+          자기의 이유로 받아들이기로 했습니다.
+          서로가 자유할 수 있는 가정을 이루고자 합니다.
+
+          희로애락을 겪는 모든 과정에서
+          외롭지 않도록 곁을 지키겠단 다짐,
+          여러분과 함께 이 약속을 나누고 싶습니다.
+
+          함께해 주셔서
+          이 약속의 증인이 되어주시길 바랍니다.
+          감사합니다.
         </div>
       </section>
 
@@ -189,7 +216,6 @@
       }, { threshold: 0.1 });
       document.querySelectorAll('.fade-in').forEach(function(el) { observer.observe(el); });
       
-      // [수정] 인원 선택하면 글자색 진하게 변경
       document.getElementById('guestCount').addEventListener('change', function() {
         this.style.color = '#333';
       });
@@ -225,18 +251,17 @@
       var count = document.getElementById("guestCount").value;
       var btn = document.getElementById("submitBtn");
 
-      // [수정] 표준식 유효성 검사 적용 (이름 2~4자, 휴대폰 01x-xxxx-xxxx)
       var nameRegex = /^[가-힣]{2,4}$/;
-      var phoneRegex = /^01[016789]-\d{3,4}-\d{4}$/; // 010, 011 등 포함
+      var phoneRegex = /^01[016789]-\d{3,4}-\d{4}$/;
 
       if (!nameRegex.test(name)) return toast("성함을 한글 2~4자로 입력해 주세요");
       if (!phoneRegex.test(phone)) return toast("연락처를 정확히 입력해 주세요");
-      if (!count) return toast("참석 인원을 선택해 주세요"); // 인원 미선택 시 경고
+      if (!count) return toast("참석 인원을 선택해 주세요");
 
       btn.disabled = true; btn.textContent = "전송 중...";
 
       // [중요] 여기에 본인의 백엔드 URL을 넣으세요!
-      var scriptUrl = "https://script.google.com/macros/s/AKfycbyiH2i4i4H...본인URL.../exec"; 
+      var scriptUrl = "https://script.google.com/macros/s/아이디/exec"; 
 
       fetch(scriptUrl, {
         method: "POST",
@@ -245,12 +270,11 @@
         body: JSON.stringify({ name: name, phone: phone, guestCount: count })
       })
       .then(response => {
-        // [수정] 완료 메시지 변경: "소식이 전달되었습니다"
-        toast("소식이 전달되었습니다"); 
+        toast("소식이 전달되었습니다");
         document.getElementById("name").value = "";
         document.getElementById("phone").value = "";
-        document.getElementById("guestCount").value = ""; // 인원 선택 초기화
-        document.getElementById("guestCount").style.color = '#666'; // 색상 초기화
+        document.getElementById("guestCount").value = "";
+        document.getElementById("guestCount").style.color = '#666';
         btn.disabled = false; btn.textContent = "참석 소식 전하기";
       })
       .catch(error => {
